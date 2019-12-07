@@ -36,11 +36,11 @@ const fileFilter = (req, file, cb) => {
     }
 }
 
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log', {flags: 'a'}));
+// const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'});
 
-app.use(helmet());
-app.use(compression());
-app.use(morgan('combined', {stream: accessLogStream}))
+// app.use(helmet());
+// app.use(compression());
+// app.use(morgan('combined', {stream: accessLogStream}))
 
 app.use(bodyParser.json());
 app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'));
