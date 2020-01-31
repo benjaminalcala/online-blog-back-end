@@ -70,7 +70,8 @@ exports.postPost = (req, res, next) => {
         error.statusCode = 422;
         throw error;
     }
-    const imageUrl = req.file.path.replace('\\', '/')
+    //const imageUrl = req.file.path.replace('\\', '/');
+    const imageUrl = req.file.location
     const title = req.body.title;
     const content = req.body.content;
     let creator;
@@ -119,9 +120,9 @@ exports.updatePost = (req, res, next) => {
     const content = req.body.content;
     let imageUrl = req.body.image;
     if(req.file){
-        console.log('imageURLLL:', imageUrl)
-        imageUrl = req.file.path.replace('\\', '/')
-        console.log('imageURLL2:', imageUrl)
+        // imageUrl = req.file.path.replace('\\', '/')
+        imageUrl = req.file.location
+        
     }
     if(!imageUrl) {
         const error = new Error('No image selected.');
@@ -141,9 +142,9 @@ exports.updatePost = (req, res, next) => {
             error.statusCode = 403;
             throw error;
         }
-        if(imageUrl !== post.imageUrl){
-            clearImage(post.imageUrl);
-        }
+        // if(imageUrl !== post.imageUrl){
+        //     clearImage(post.imageUrl);
+        // }
         post.title = title;
         post.content = content;
         post.imageUrl = imageUrl;
@@ -175,7 +176,7 @@ exports.deletePost = (req, res, next) => {
             error.statusCode = 403;
             throw error;  
         }
-        clearImage(post.imageUrl);
+        //clearImage(post.imageUrl);
         return Post.findByIdAndRemove(postId)
     })
     .then(result => {
@@ -246,9 +247,9 @@ exports.postStatus = (req, res, next) => {
 
 }
 
-const clearImage = filePath => {
-    filePath = path.join(__dirname, '..', filePath);
-    fs.unlink(filePath, (err) => {
-        console.log(err)
-    })
-}
+// const clearImage = filePath => {
+//     filePath = path.join(__dirname, '..', filePath);
+//     fs.unlink(filePath, (err) => {
+//         console.log(err)
+//     })
+// }

@@ -9,9 +9,19 @@ const uuidv4 = require('uuid/v4');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
+const aws = require('aws-sdk');
+const multerS3 = require('multer-s3');
 
 const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
+
+aws.config.update({
+    secretAccessKey: process.env.AMAZON_SECRET_ACCESS_KEY,
+    accessKeyId:process.env.AMAZON_ACCESS_KEY_ID,
+    region: 'us-west-1'
+  })
+  
+const s3 = new aws.S3();
 
 const app = express();
 
@@ -43,7 +53,20 @@ const fileFilter = (req, file, cb) => {
 // app.use(morgan('combined', {stream: accessLogStream}))
 
 app.use(bodyParser.json());
-app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'));
+app.use(multer({
+    storage: multerS3({
+      s3: s3,
+      bucket: 'ben-online-blog-images',
+      acl:'public-read',
+      metadata: (req, file, cb) => {
+        cb(null, {fieldName: file.fieldname});
+      },
+      contentDisposition: 'attachment',
+      key: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname)
+      }
+    }), fileFilter: fileFilter}).single('image'));
+//app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'));
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
 app.use((req, res, next) => {
