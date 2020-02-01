@@ -71,7 +71,7 @@ exports.postPost = (req, res, next) => {
         throw error;
     }
     //const imageUrl = req.file.path.replace('\\', '/');
-    const imageUrl = req.file.location
+    const imageUrl = req.file.location;
     const title = req.body.title;
     const content = req.body.content;
     let creator;

@@ -25,14 +25,14 @@ const s3 = new aws.S3();
 
 const app = express();
 
-const fileStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'images')
-    },
-    filename: (req, file, cb) => {
-        cb(null, uuidv4())
-    }
-})
+// const fileStorage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, 'images')
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, uuidv4())
+//     }
+// })
 
 const fileFilter = (req, file, cb) => {
     if(
